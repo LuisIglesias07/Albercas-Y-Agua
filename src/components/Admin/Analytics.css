@@ -1,0 +1,229 @@
+.analytics-dashboard {
+    min-height: 100vh;
+    padding: var(--spacing-xl) 0;
+    background-color: #F3F4F6;
+}
+
+.analytics-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.analytics-header h1 {
+    color: var(--primary-blue);
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.subtitle {
+    color: #6B7280;
+    font-size: 1.1rem;
+}
+
+/* KPI Cards */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.kpi-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.kpi-icon {
+    font-size: 3rem;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.kpi-card.revenue .kpi-icon {
+    background: linear-gradient(135deg, #10B981, #059669);
+}
+
+.kpi-card.orders .kpi-icon {
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+}
+
+.kpi-card.pending .kpi-icon {
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+}
+
+.kpi-card.average .kpi-icon {
+    background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+}
+
+.kpi-content {
+    flex: 1;
+}
+
+.kpi-content h3 {
+    color: #6B7280;
+    font-size: 0.95rem;
+    margin: 0 0 8px 0;
+    font-weight: 600;
+}
+
+.kpi-value {
+    color: var(--dark-blue);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    line-height: 1;
+}
+
+.kpi-label {
+    color: #9CA3AF;
+    font-size: 0.85rem;
+}
+
+/* Charts Grid */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.chart-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.chart-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.chart-card h3 {
+    color: var(--dark-blue);
+    margin: 0 0 var(--spacing-lg) 0;
+    font-size: 1.2rem;
+}
+
+/* Table Section */
+.table-section {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.table-section h3 {
+    color: var(--dark-blue);
+    margin: 0 0 var(--spacing-lg) 0;
+    font-size: 1.2rem;
+}
+
+.products-revenue-table {
+    overflow-x: auto;
+}
+
+.products-revenue-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.products-revenue-table thead {
+    background-color: #F9FAFB;
+}
+
+.products-revenue-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--dark-blue);
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.products-revenue-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.products-revenue-table tbody tr:hover {
+    background-color: #F9FAFB;
+}
+
+.revenue-cell {
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl) * 2;
+}
+
+.spinner {
+    border: 4px solid #E5E7EB;
+    border-top: 4px solid var(--primary-blue);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--spacing-md);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .kpi-icon {
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+/* Recharts customization */
+.recharts-tooltip-wrapper {
+    outline: none;
+}
+
+.recharts-default-tooltip {
+    background-color: var(--white) !important;
+    border: 1px solid #E5E7EB !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: var(--shadow-md) !important;
+}
