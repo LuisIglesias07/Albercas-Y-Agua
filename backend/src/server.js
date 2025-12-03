@@ -9,9 +9,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// 1. LIMPIEZA DE VARIABLE: Quitamos espacios vacíos o saltos de línea
+const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.trim() : 'http://localhost:5173';
+
+// 2. DEBUG: Esto nos dirá en los logs de Railway EXACTAMENTE qué está recibiendo (con comillas visibles)
+console.log('🔍 FRONTEND_URL detectada:', JSON.stringify(frontendUrl));
+
 // CORS configuration
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: frontendUrl, // Usamos la variable limpia
     credentials: true,
     optionsSuccessStatus: 200
 };
@@ -28,7 +34,8 @@ app.get('/', (req, res) => {
         success: true,
         message: 'Albercas y Agua - Mercado Pago API',
         version: '1.0.0',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        cors_configured_for: frontendUrl // Te mostrará en pantalla para quién está abierto
     });
 });
 
