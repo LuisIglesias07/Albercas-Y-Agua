@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAllProducts } from '../../services/productService';
-import { uploadProductImage, createProduct, updateProduct, deleteProduct, toggleProductAvailability } from '../../services/adminService';
+import { createProduct, updateProduct, deleteProduct, toggleProductAvailability } from '../../services/adminService';
 import type { Product } from '../../types/product';
 import { AdminNav } from './AdminNav';
 import './AdminDashboard.css';
@@ -17,7 +17,7 @@ export const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imageUrl, setImageUrl] = useState('');
     const [imagePreview, setImagePreview] = useState<string>('');
     const [formData, setFormData] = useState({
         name: '',
@@ -65,16 +65,10 @@ export const AdminDashboard = () => {
         }
     };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
+    const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const url = e.target.value;
+        setImageUrl(url);
+        setImagePreview(url);
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -97,7 +91,7 @@ export const AdminDashboard = () => {
             stock: '',
             available: true
         });
-        setImageFile(null);
+        setImageUrl('');
         setImagePreview('');
         setShowModal(true);
     };
@@ -115,7 +109,7 @@ export const AdminDashboard = () => {
             available: product.available !== false
         });
         setImagePreview(product.image || '');
-        setImageFile(null);
+        setImageUrl('');
         setShowModal(true);
     };
 
@@ -124,24 +118,30 @@ export const AdminDashboard = () => {
         setLoading(true);
 
         try {
-            let imageUrl = editingProduct?.image || '';
-
-            if (imageFile) {
-                const productId = editingProduct?.id || `product_${Date.now()}`;
-                imageUrl = await uploadProductImage(imageFile, productId);
-            }
-
             const productData: Partial<Product> = {
                 name: formData.name,
                 description: formData.description,
                 category: formData.category,
-                price: formData.price ? parseFloat(formData.price) : undefined,
-                price_min: formData.price_min ? parseFloat(formData.price_min) : undefined,
-                price_max: formData.price_max ? parseFloat(formData.price_max) : undefined,
-                stock: formData.stock ? parseInt(formData.stock) : undefined,
                 available: formData.available,
-                image: imageUrl
+                image: imageUrl || editingProduct?.image || ''
             };
+
+            // Only include numeric fields if they have values
+            if (formData.price && !isNaN(parseFloat(formData.price))) {
+                productData.price = parseFloat(formData.price);
+            }
+
+            if (formData.price_min && !isNaN(parseFloat(formData.price_min))) {
+                productData.price_min = parseFloat(formData.price_min);
+            }
+
+            if (formData.price_max && !isNaN(parseFloat(formData.price_max))) {
+                productData.price_max = parseFloat(formData.price_max);
+            }
+
+            if (formData.stock && !isNaN(parseInt(formData.stock))) {
+                productData.stock = parseInt(formData.stock);
+            }
 
             if (editingProduct) {
                 await updateProduct(editingProduct.id, productData);
@@ -433,12 +433,16 @@ export const AdminDashboard = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Imagen del Producto</label>
+                                    <label>URL de Imagen del Producto</label>
                                     <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
+                                        type="url"
+                                        placeholder="https://ejemplo.com/imagen.jpg"
+                                        value={imageUrl}
+                                        onChange={handleImageUrlChange}
                                     />
+                                    <small style={{ color: '#6B7280', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                                        Sube tu imagen a Imgur, Google Drive (link público), o cualquier servicio gratuito
+                                    </small>
                                     {imagePreview && (
                                         <div className="image-preview">
                                             <img src={imagePreview} alt="Preview" />

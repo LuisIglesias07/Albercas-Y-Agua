@@ -1,0 +1,88 @@
+.payment-page.pending-page {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.pending-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+.pending-message {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.pending-info {
+    text-align: left;
+    margin: 2rem 0;
+    background: #e7f3ff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid #2196f3;
+}
+
+.pending-info h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.pending-info p {
+    color: #555;
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.pending-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.pending-info li {
+    padding: 0.5rem 0;
+    color: #555;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.pending-info li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #2196f3;
+    font-weight: bold;
+}
+
+.timeline {
+    background: white;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+.timeline strong {
+    color: #2c3e50;
+}

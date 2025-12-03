@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { getSalesStatistics, getTopSellingProducts, getDailySales, getRevenueByCategory } from '../../services/analyticsService';
 import type { SalesStats, ProductSales, DailySales } from '../../services/analyticsService';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AdminNav } from './AdminNav';
 import './Analytics.css';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
@@ -77,9 +78,21 @@ export const Analytics = () => {
         <div className="analytics-dashboard">
             <div className="container">
                 <div className="analytics-header">
-                    <h1>📊 Dashboard de Analíticas</h1>
+                    <div className="header-with-back">
+                        <button
+                            className="back-button"
+                            onClick={() => navigate('/admin')}
+                            title="Volver al Panel de Productos"
+                        >
+                            ← Volver
+                        </button>
+                        <h1>📊 Dashboard de Analíticas</h1>
+                    </div>
                     <p className="subtitle">Estadísticas y reportes de ventas</p>
                 </div>
+
+                {/* Admin Navigation */}
+                <AdminNav />
 
                 {/* KPI Cards */}
                 <div className="kpi-grid">

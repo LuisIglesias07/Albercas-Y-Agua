@@ -12,12 +12,17 @@ import { Products } from './components/Products';
 import { CategoryDetail } from './components/CategoryDetail';
 import { ProductDetail } from './components/ProductDetail';
 import { CartPage } from './components/CartPage';
+import { Checkout } from './components/Checkout';
+import { PaymentSuccess } from './components/PaymentSuccess';
+import { PaymentFailure } from './components/PaymentFailure';
+import { PaymentPending } from './components/PaymentPending';
 import { MyOrders } from './components/MyOrders';
 import { AdminDashboard } from './components/Admin/AdminDashboard';
 import { OrdersManagement } from './components/Admin/OrdersManagement';
 import { Analytics } from './components/Admin/Analytics';
 import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
+
 
 const Home = () => (
   <>
@@ -40,6 +45,10 @@ function App() {
             <Route path="/category/:categoryName" element={<CategoryDetail />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/failure" element={<PaymentFailure />} />
+            <Route path="/payment/pending" element={<PaymentPending />} />
             <Route path="/orders" element={<MyOrders />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/orders" element={<OrdersManagement />} />

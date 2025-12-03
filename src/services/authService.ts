@@ -24,7 +24,12 @@ export interface UserProfile {
     };
 }
 
-const ADMIN_EMAIL = 'albercasvergaras@gmail.com';
+// Get admin email from environment variable (more secure than hardcoding)
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || '';
+
+if (!ADMIN_EMAIL) {
+    console.warn('⚠️ VITE_ADMIN_EMAIL no está configurado en las variables de entorno');
+}
 
 // Register new user
 export const registerUser = async (

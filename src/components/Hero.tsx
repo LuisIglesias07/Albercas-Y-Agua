@@ -22,7 +22,7 @@ export const Hero = () => {
                     ref={subtitleRef}
                     className={`hero-subtitle scroll-reveal scroll-reveal-delay-1 ${subtitleVisible ? 'visible' : ''}`}
                 >
-                    Expertos en equipamiento, mantenimiento y construcción de albercas.
+                    Expertos en construcción, equipamiento y mantenimiento de albercas.
                     Calidad y servicio garantizado.
                 </p>
                 <div
