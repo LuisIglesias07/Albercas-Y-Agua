@@ -1,0 +1,22 @@
+{
+  "name": "albercas-agua-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Mercado Pago integration",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": ["mercadopago", "express", "firebase"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mercadopago": "^2.0.15",
+    "firebase-admin": "^12.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express-validator": "^7.0.1"
+  }
+}
