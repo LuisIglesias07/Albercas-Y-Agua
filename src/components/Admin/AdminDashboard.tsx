@@ -218,6 +218,11 @@ export const AdminDashboard = () => {
         }
     };
 
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategory(category);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     if (userProfile?.role !== 'admin') {
         return null;
     }
@@ -242,7 +247,7 @@ export const AdminDashboard = () => {
                         <ul className="category-list">
                             <li
                                 className={selectedCategory === 'all' ? 'active' : ''}
-                                onClick={() => setSelectedCategory('all')}
+                                onClick={() => handleCategoryChange('all')}
                             >
                                 <span className="category-name">
                                     <span className="category-icon">📦</span>
@@ -260,7 +265,7 @@ export const AdminDashboard = () => {
                                     >
                                         <span
                                             className="category-name"
-                                            onClick={() => setSelectedCategory(category)}
+                                            onClick={() => handleCategoryChange(category)}
                                         >
                                             <span className="category-icon">📂</span>
                                             {category}

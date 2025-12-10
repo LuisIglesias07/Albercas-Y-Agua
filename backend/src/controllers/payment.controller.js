@@ -1,6 +1,7 @@
 import { preferenceClient, paymentClient } from '../config/mercadopago.js';
 import { db } from '../config/firebase.js';
 import { validationResult } from 'express-validator';
+import { sendOrderConfirmationEmail, sendAdminNotificationEmail } from '../services/email.service.js';
 
 /**
  * Create Mercado Pago payment preference
@@ -191,6 +192,36 @@ export const handleWebhook = async (req, res) => {
                                 }
                             ]
                         });
+
+                        // Send email notifications
+                        try {
+                            console.log('📧 Sending email notifications...');
+
+                            // Prepare order data for emails
+                            const emailOrderData = {
+                                orderNumber: currentOrder.orderNumber,
+                                userEmail: currentOrder.userEmail,
+                                items: currentOrder.items,
+                                shippingAddress: currentOrder.shippingAddress,
+                                shippingCost: currentOrder.shippingCost || 0,
+                                subtotal: currentOrder.subtotal,
+                                total: currentOrder.total
+                            };
+
+                            // Send both emails (don't await to avoid blocking webhook response)
+                            Promise.all([
+                                sendOrderConfirmationEmail(emailOrderData),
+                                sendAdminNotificationEmail(emailOrderData)
+                            ]).then(() => {
+                                console.log('✅ All email notifications sent successfully');
+                            }).catch((emailError) => {
+                                console.error('❌ Error sending some emails:', emailError);
+                            });
+
+                        } catch (emailError) {
+                            // Log error but don't fail the webhook
+                            console.error('❌ Error preparing emails:', emailError);
+                        }
                     }
 
                     console.log(`✅ Order ${orderId} updated with payment status: ${ourPaymentStatus}`);
