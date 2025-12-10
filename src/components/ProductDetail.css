@@ -216,6 +216,63 @@
     box-shadow: var(--shadow-lg);
 }
 
+/* Shipping Quotation Section */
+.shipping-quote-section,
+.shipping-standard-section {
+    background-color: #F0F9FF;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    margin-top: var(--spacing-md);
+    border: 2px solid var(--secondary-aqua);
+}
+
+.shipping-quote-section h4,
+.shipping-standard-section h4 {
+    margin-bottom: var(--spacing-md);
+    color: var(--dark-blue);
+}
+
+.shipping-notice {
+    color: #4B5563;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+.whatsapp-quote-btn {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: var(--white);
+    border: none;
+    padding: 14px 24px;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.whatsapp-quote-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+}
+
+.shipping-standard-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.shipping-standard-section li {
+    padding: 8px 0;
+    color: #4B5563;
+    font-size: 0.95rem;
+}
+
 .product-features {
     background-color: #F9FAFB;
     padding: var(--spacing-lg);

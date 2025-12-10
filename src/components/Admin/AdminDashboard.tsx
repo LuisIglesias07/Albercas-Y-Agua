@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAllProducts } from '../../services/productService';
-import { createProduct, updateProduct, deleteProduct, toggleProductAvailability, deleteCategoryWithProducts } from '../../services/adminService';
+import { createProduct, updateProduct, deleteProduct, toggleProductAvailability, deleteCategoryWithProducts, toggleCategoryShippingQuote } from '../../services/adminService';
 import type { Product } from '../../types/product';
 import { AdminNav } from './AdminNav';
 import './AdminDashboard.css';
@@ -27,7 +27,8 @@ export const AdminDashboard = () => {
         price_min: '',
         price_max: '',
         stock: '',
-        available: true
+        available: true,
+        requiereCotizacion: false
     });
 
     // Check if user is admin
@@ -89,7 +90,8 @@ export const AdminDashboard = () => {
             price_min: '',
             price_max: '',
             stock: '',
-            available: true
+            available: true,
+            requiereCotizacion: false
         });
         setImageUrl('');
         setImagePreview('');
@@ -106,7 +108,8 @@ export const AdminDashboard = () => {
             price_min: product.price_min?.toString() || '',
             price_max: product.price_max?.toString() || '',
             stock: product.stock?.toString() || '',
-            available: product.available !== false
+            available: product.available !== false,
+            requiereCotizacion: product.requiereCotizacion || false
         });
         setImagePreview(product.image || '');
         setImageUrl('');
@@ -123,6 +126,7 @@ export const AdminDashboard = () => {
                 description: formData.description,
                 category: formData.category,
                 available: formData.available,
+                requiereCotizacion: formData.requiereCotizacion,
                 image: imageUrl || editingProduct?.image || ''
             };
 
@@ -199,6 +203,21 @@ export const AdminDashboard = () => {
         }
     };
 
+    const handleToggleCategoryQuote = async (categoryName: string, requireQuote: boolean) => {
+        const count = products.filter(p => p.category === categoryName).length;
+        const action = requireQuote ? 'activar' : 'desactivar';
+
+        if (window.confirm(`¿Seguro que quieres ${action} la cotización de envío para TODOS los ${count} productos de "${categoryName}"?`)) {
+            try {
+                const updatedCount = await toggleCategoryShippingQuote(categoryName, requireQuote);
+                await loadProducts();
+                alert(`✅ ${updatedCount} productos actualizados en "${categoryName}"`);
+            } catch (error: any) {
+                alert('Error: ' + error.message);
+            }
+        }
+    };
+
     if (userProfile?.role !== 'admin') {
         return null;
     }
@@ -233,6 +252,7 @@ export const AdminDashboard = () => {
                             </li>
                             {categories.map(category => {
                                 const count = products.filter(p => p.category === category).length;
+                                const hasQuoteProducts = products.some(p => p.category === category && p.requiereCotizacion);
                                 return (
                                     <li
                                         key={category}
@@ -246,6 +266,16 @@ export const AdminDashboard = () => {
                                             {category}
                                         </span>
                                         <div className="category-actions">
+                                            <input
+                                                type="checkbox"
+                                                className="category-quote-checkbox"
+                                                checked={hasQuoteProducts}
+                                                onChange={(e) => {
+                                                    e.stopPropagation();
+                                                    handleToggleCategoryQuote(category, e.target.checked);
+                                                }}
+                                                title="Requiere cotización de envío"
+                                            />
                                             <span className="category-count">{count}</span>
                                             <button
                                                 className="delete-category-btn"
@@ -462,6 +492,21 @@ export const AdminDashboard = () => {
                                             />
                                             Disponible
                                         </label>
+                                    </div>
+
+                                    <div className="form-group checkbox-group">
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                name="requiereCotizacion"
+                                                checked={formData.requiereCotizacion}
+                                                onChange={handleInputChange}
+                                            />
+                                            🚚 Requiere cotización de envío
+                                        </label>
+                                        <small style={{ color: '#6B7280', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                                            Marca esta opción para productos grandes/voluminosos
+                                        </small>
                                     </div>
                                 </div>
 

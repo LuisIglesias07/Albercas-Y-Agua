@@ -136,6 +136,42 @@
     color: #3498db;
 }
 
+/* Shipping Quote Alert */
+.shipping-quote-alert {
+    background: #FFF4E6;
+    border: 2px solid #FFB84D;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: #8B5A00;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* WhatsApp Quote Button in Checkout */
+.whatsapp-quote-checkout-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.whatsapp-quote-checkout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+}
+
 /* Checkout Summary */
 .checkout-summary {
     position: sticky;
@@ -287,7 +323,9 @@
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .payment-info {

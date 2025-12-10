@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getAllProducts, getAllCategories } from '../services/productService';
 import { useCart } from '../contexts/CartContext';
 import type { Product } from '../types/product';
@@ -7,6 +7,7 @@ import './Products.css';
 
 export const Products = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const { addItem } = useCart();
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
@@ -24,11 +25,18 @@ export const Products = () => {
             ]);
             setProducts(productsData);
             setCategories(categoriesData);
+
+            // Leer el parámetro de categoría de la URL
+            const categoryParam = searchParams.get('category');
+            if (categoryParam && categoriesData.includes(categoryParam)) {
+                setSelectedCategory(categoryParam);
+            }
+
             setLoading(false);
         };
 
         fetchData();
-    }, []);
+    }, [searchParams]);
 
     // Filtrar productos
     const filteredProducts = products.filter(product => {

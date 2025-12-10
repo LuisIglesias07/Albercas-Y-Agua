@@ -10,6 +10,7 @@ export interface Product {
     price_min?: number;
     price_max?: number;
     image?: string;
+    requiereCotizacion?: boolean;
 }
 
 // Obtener todos los productos

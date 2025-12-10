@@ -44,6 +44,15 @@ export const ProductDetail = () => {
         }
     };
 
+    const handleWhatsAppQuote = () => {
+        if (product) {
+            const message = encodeURIComponent(
+                `Hola, me interesa cotizar el envío para:\n📦 ${product.name}\n🔗 ${window.location.href}`
+            );
+            window.open(`https://web.whatsapp.com/send?phone=523121165367&text=${message}`, '_blank');
+        }
+    };
+
     const formatPrice = (product: Product): string => {
         if (product.price) {
             return `$${product.price.toLocaleString('es-MX')}`;
@@ -154,11 +163,32 @@ export const ProductDetail = () => {
                             </button>
                         </div>
 
+                        {/* Shipping Information */}
+                        {product.requiereCotizacion ? (
+                            <div className="shipping-quote-section">
+                                <h4>🚚 Envío</h4>
+                                <p className="shipping-notice">
+                                    📦 Este producto requiere cotización de envío debido a su tamaño
+                                </p>
+                                <button className="whatsapp-quote-btn" onClick={handleWhatsAppQuote}>
+                                    💬 Cotizar envío por WhatsApp
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="shipping-standard-section">
+                                <h4>🚚 Envío disponible</h4>
+                                <ul>
+                                    <li>✓ FedEx (3-5 días) - $150.00</li>
+                                    <li>✓ DHL Express (1-2 días) - $200.00</li>
+                                    <li>✓ Retiro en tienda - Gratis</li>
+                                </ul>
+                            </div>
+                        )}
+
                         <div className="product-features">
                             <h4>Información adicional</h4>
                             <ul>
                                 <li>✓ Envío a toda la República Mexicana</li>
-                                <li>✓ Retiro en tienda disponible</li>
                                 <li>✓ Asesoría técnica incluida</li>
                                 <li>✓ Garantía del fabricante</li>
                             </ul>

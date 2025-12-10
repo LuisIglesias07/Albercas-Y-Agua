@@ -2,6 +2,18 @@ import { useNavigate } from 'react-router-dom';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import './CategoryGrid.css';
 
+// Mapeo de nombres mostrados a nombres en la base de datos
+const categoryMapping: { [key: string]: string } = {
+    'Bombas para alberca': 'Bombas para alberca residenciales',
+    'Filtros de arena': 'Filtros de arena PDG',
+    'Calentamiento': 'Calentadores',
+    'Iluminación': 'Iluminación',
+    'Automatización': 'Automatización',
+    'Limpieza': 'Quimicos',
+    'Hidromasaje': 'Hidromasaje',
+    'Accesorios': 'Accesorios'
+};
+
 const categories = [
     { id: 1, title: 'Bombas para alberca', icon: '💧', description: 'Residenciales y de velocidad variable.' },
     { id: 2, title: 'Filtros de arena', icon: '🌪️', description: 'PDG, HAX-S y fibra de vidrio.' },
@@ -18,6 +30,15 @@ export const CategoryGrid = () => {
     const { ref: titleRef, isVisible: titleVisible } = useScrollReveal();
     const { ref: gridRef, isVisible: gridVisible } = useScrollReveal();
     const { ref: buttonRef, isVisible: buttonVisible } = useScrollReveal();
+
+    // Función para manejar el click en una categoría
+    const handleCategoryClick = (categoryTitle: string) => {
+        // Convertir el nombre mostrado al nombre en la base de datos
+        const dbCategoryName = categoryMapping[categoryTitle] || categoryTitle;
+        // Navegamos a la página de productos con el parámetro de categoría
+        navigate(`/products?category=${encodeURIComponent(dbCategoryName)}`);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
         <section className="categories-section" id="products">
@@ -42,6 +63,7 @@ export const CategoryGrid = () => {
                         <div
                             key={category.id}
                             className={`category-card scroll-reveal scroll-reveal-delay-${Math.min(index % 4 + 1, 5)} ${gridVisible ? 'visible' : ''}`}
+                            onClick={() => handleCategoryClick(category.title)}
                         >
                             <div className="category-icon">{category.icon}</div>
                             <h3 className="category-title">{category.title}</h3>

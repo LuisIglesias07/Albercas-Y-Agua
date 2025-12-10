@@ -43,6 +43,9 @@ export const Checkout = () => {
         }
     }, [items, navigate]);
 
+    // Detect if cart has products requiring shipping quotation
+    const hasQuoteProducts = items.some((item: any) => item.requiereCotizacion);
+
     const getShippingCost = (): number => {
         if (shippingMethod === 'local') return 0;
         if (shippingMethod === 'fedex') return 150;
@@ -259,6 +262,13 @@ export const Checkout = () => {
                         <section className="form-section">
                             <h2>🚚 Método de Envío</h2>
 
+                            {hasQuoteProducts && (
+                                <div className="shipping-quote-alert">
+                                    ⚠️ Tu carrito incluye productos que requieren cotización de envío.
+                                    Por favor selecciona "Retiro en tienda" o contáctanos por WhatsApp para cotizar el envío.
+                                </div>
+                            )}
+
                             <div className="shipping-options">
                                 <label className={`shipping-option ${shippingMethod === 'local' ? 'selected' : ''}`}>
                                     <input
@@ -274,33 +284,56 @@ export const Checkout = () => {
                                     </div>
                                 </label>
 
-                                <label className={`shipping-option ${shippingMethod === 'fedex' ? 'selected' : ''}`}>
-                                    <input
-                                        type="radio"
-                                        name="shippingMethod"
-                                        value="fedex"
-                                        checked={shippingMethod === 'fedex'}
-                                        onChange={(e) => setShippingMethod(e.target.value as any)}
-                                    />
-                                    <div className="option-content">
-                                        <div className="option-title">📮 FedEx (3-5 días)</div>
-                                        <div className="option-price">{formatPrice(150)}</div>
-                                    </div>
-                                </label>
+                                {!hasQuoteProducts && (
+                                    <>
+                                        <label className={`shipping-option ${shippingMethod === 'fedex' ? 'selected' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="shippingMethod"
+                                                value="fedex"
+                                                checked={shippingMethod === 'fedex'}
+                                                onChange={(e) => setShippingMethod(e.target.value as any)}
+                                            />
+                                            <div className="option-content">
+                                                <div className="option-title">📮 FedEx (3-5 días)</div>
+                                                <div className="option-price">{formatPrice(150)}</div>
+                                            </div>
+                                        </label>
 
-                                <label className={`shipping-option ${shippingMethod === 'dhl' ? 'selected' : ''}`}>
-                                    <input
-                                        type="radio"
-                                        name="shippingMethod"
-                                        value="dhl"
-                                        checked={shippingMethod === 'dhl'}
-                                        onChange={(e) => setShippingMethod(e.target.value as any)}
-                                    />
-                                    <div className="option-content">
-                                        <div className="option-title">✈️ DHL Express (1-2 días)</div>
-                                        <div className="option-price">{formatPrice(200)}</div>
-                                    </div>
-                                </label>
+                                        <label className={`shipping-option ${shippingMethod === 'dhl' ? 'selected' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="shippingMethod"
+                                                value="dhl"
+                                                checked={shippingMethod === 'dhl'}
+                                                onChange={(e) => setShippingMethod(e.target.value as any)}
+                                            />
+                                            <div className="option-content">
+                                                <div className="option-title">✈️ DHL Express (1-2 días)</div>
+                                                <div className="option-price">{formatPrice(200)}</div>
+                                            </div>
+                                        </label>
+                                    </>
+                                )}
+
+                                {hasQuoteProducts && (
+                                    <button
+                                        type="button"
+                                        className="whatsapp-quote-checkout-btn"
+                                        onClick={() => {
+                                            const productsText = items
+                                                .filter((item: any) => item.requiereCotizacion)
+                                                .map((item: any) => `- ${item.name}`)
+                                                .join('\n');
+                                            const message = encodeURIComponent(
+                                                `Hola, necesito cotizar el envío para:\n${productsText}\n\nMi dirección será:\n${formData.street}, ${formData.city}, ${formData.state}, CP: ${formData.zipCode}`
+                                            );
+                                            window.open(`https://web.whatsapp.com/send?phone=523121165367&text=${message}`, '_blank');
+                                        }}
+                                    >
+                                        💬 Cotizar envío por WhatsApp
+                                    </button>
+                                )}
                             </div>
                         </section>
                     </div>

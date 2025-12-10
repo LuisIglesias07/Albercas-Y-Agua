@@ -9,6 +9,7 @@ export interface Product {
     image?: string;
     available?: boolean;
     stock?: number;
+    requiereCotizacion?: boolean;  // Para productos grandes que necesitan cotización de envío
     createdAt?: Date;
     updatedAt?: Date;
 }

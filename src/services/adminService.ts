@@ -165,3 +165,35 @@ export const deleteCategoryWithProducts = async (categoryName: string): Promise<
         throw new Error(`Error deleting category: ${error.message}`);
     }
 };
+
+// Toggle shipping quotation for all products in a category
+export const toggleCategoryShippingQuote = async (categoryName: string, requiereCotizacion: boolean): Promise<number> => {
+    try {
+        const { collection, getDocs, query, where, writeBatch } = await import('firebase/firestore');
+
+        // Get all products in this category
+        const productsRef = collection(db, 'productos');
+        const q = query(productsRef, where('category', '==', categoryName));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            return 0;
+        }
+
+        // Use batch to update all products at once
+        const batch = writeBatch(db);
+
+        snapshot.docs.forEach((doc) => {
+            batch.update(doc.ref, {
+                requiereCotizacion,
+                updatedAt: new Date()
+            });
+        });
+
+        await batch.commit();
+
+        return snapshot.size;
+    } catch (error: any) {
+        throw new Error(`Error updating category shipping quote: ${error.message}`);
+    }
+};
