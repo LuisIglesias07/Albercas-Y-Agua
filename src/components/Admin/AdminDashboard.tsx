@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAllProducts } from '../../services/productService';
-import { createProduct, updateProduct, deleteProduct, toggleProductAvailability } from '../../services/adminService';
+import { createProduct, updateProduct, deleteProduct, toggleProductAvailability, deleteCategoryWithProducts } from '../../services/adminService';
 import type { Product } from '../../types/product';
 import { AdminNav } from './AdminNav';
 import './AdminDashboard.css';
@@ -162,10 +162,14 @@ export const AdminDashboard = () => {
     const handleDelete = async (product: Product) => {
         if (window.confirm(`¿Estás seguro de eliminar "${product.name}"?`)) {
             try {
+                console.log('🔴 Iniciando eliminación de producto:', product.id, product.name);
                 await deleteProduct(product.id, product.image);
+                console.log('✅ Producto eliminado del servicio, recargando lista...');
                 await loadProducts();
+                console.log('✅ Lista de productos recargada');
                 alert('Producto eliminado exitosamente');
             } catch (error: any) {
+                console.error('❌ Error al eliminar:', error);
                 alert('Error: ' + error.message);
             }
         }
@@ -177,6 +181,21 @@ export const AdminDashboard = () => {
             await loadProducts();
         } catch (error: any) {
             alert('Error: ' + error.message);
+        }
+    };
+
+    const handleDeleteCategory = async (categoryName: string) => {
+        const count = products.filter(p => p.category === categoryName).length;
+
+        if (window.confirm(`⚠️ ¿Estás seguro de eliminar la categoría "${categoryName}" y TODOS sus ${count} productos?\n\nEsta acción no se puede deshacer.`)) {
+            try {
+                const deletedCount = await deleteCategoryWithProducts(categoryName);
+                await loadProducts();
+                setSelectedCategory('all');
+                alert(`✅ Categoría eliminada exitosamente.\n${deletedCount} productos marcados como eliminados.`);
+            } catch (error: any) {
+                alert('Error: ' + error.message);
+            }
         }
     };
 
@@ -218,13 +237,27 @@ export const AdminDashboard = () => {
                                     <li
                                         key={category}
                                         className={selectedCategory === category ? 'active' : ''}
-                                        onClick={() => setSelectedCategory(category)}
                                     >
-                                        <span className="category-name">
+                                        <span
+                                            className="category-name"
+                                            onClick={() => setSelectedCategory(category)}
+                                        >
                                             <span className="category-icon">📂</span>
                                             {category}
                                         </span>
-                                        <span className="category-count">{count}</span>
+                                        <div className="category-actions">
+                                            <span className="category-count">{count}</span>
+                                            <button
+                                                className="delete-category-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteCategory(category);
+                                                }}
+                                                title="Eliminar categoría y todos sus productos"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
                                     </li>
                                 );
                             })}

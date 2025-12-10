@@ -71,7 +71,7 @@ export const Footer = () => {
                             </svg>
                         </a>
                         <a
-                            href="https://wa.me/523121165367"
+                            href="https://web.whatsapp.com/send?phone=523121165367&text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20productos%20y%20servicios%20de%20albercas"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="social-icon whatsapp-icon"

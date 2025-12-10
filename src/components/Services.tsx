@@ -81,7 +81,7 @@ export const Services = () => {
 
                         <div className="quote-options">
                             <a
-                                href="https://wa.me/523121165367?text=Hola,%20me%20gustaría%20cotizar%20un%20servicio%20personalizado"
+                                href="https://web.whatsapp.com/send?phone=523121165367&text=Hola,%20me%20gustaría%20cotizar%20un%20servicio%20personalizado"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="quote-button whatsapp-button"

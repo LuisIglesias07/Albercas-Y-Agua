@@ -61,12 +61,16 @@ app.use((req, res) => {
     });
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 Health check: http://localhost:${PORT}/`);
-    console.log(`🌐 CORS enabled for: ${corsOptions.origin}`);
-    console.log(`💳 Mercado Pago endpoints ready`);
-});
+// Start server (only in development/local environment)
+// Vercel will handle the server lifecycle in production
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📍 Health check: http://localhost:${PORT}/`);
+        console.log(`🌐 CORS enabled for: ${corsOptions.origin}`);
+        console.log(`💳 Mercado Pago endpoints ready`);
+    });
+}
 
+// Export the Express app for Vercel serverless functions
 export default app;

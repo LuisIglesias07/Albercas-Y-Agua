@@ -18,10 +18,12 @@ export const getAllProducts = async (): Promise<Product[]> => {
         const productsCollection = collection(db, 'productos');
         const snapshot = await getDocs(productsCollection);
 
-        return snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        } as Product));
+        return snapshot.docs
+            .map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as Product))
+            .filter(product => !(product as any).deleted); // Filtrar productos eliminados
     } catch (error) {
         console.error('Error fetching products:', error);
         return [];
@@ -35,10 +37,12 @@ export const getProductsByCategory = async (categoryName: string): Promise<Produ
         const q = query(productsCollection, where('category', '==', categoryName));
         const snapshot = await getDocs(q);
 
-        return snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        } as Product));
+        return snapshot.docs
+            .map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as Product))
+            .filter(product => !(product as any).deleted); // Filtrar productos eliminados
     } catch (error) {
         console.error('Error fetching products by category:', error);
         return [];

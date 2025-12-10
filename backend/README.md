@@ -10,6 +10,7 @@ Backend API para integración con Mercado Pago Checkout Pro.
 - **Firebase Admin SDK** - Base de datos Firestore
 - **CORS** - Control de acceso
 - **dotenv** - Variables de entorno
+- **Vercel** - Deployment serverless (recomendado)
 
 ## 📋 Requisitos Previos
 
@@ -113,7 +114,88 @@ POST /api/payment/webhook
 ```
 Recibe notificaciones automáticas de Mercado Pago cuando cambia el estado de un pago.
 
-## 🌐 Deployment a Railway
+## 🌐 Deployment a Vercel (Recomendado - 100% Gratis)
+
+### 1. Preparar el Proyecto
+
+El backend ya está configurado para Vercel con:
+- ✅ `vercel.json` - Configuración de routing y build
+- ✅ `server.js` modificado para compatibilidad serverless
+
+### 2. Crear Cuenta en Vercel
+
+1. Ve a [vercel.com](https://vercel.com)
+2. Regístrate con GitHub (gratis)
+3. Click "Add New..." → "Project"
+
+### 3. Importar Proyecto
+
+1. Selecciona tu repositorio de GitHub
+2. **IMPORTANTE**: Configura el "Root Directory" como `backend`
+3. Vercel detectará automáticamente que es un proyecto Node.js
+
+### 4. Configurar Variables de Entorno
+
+Antes de hacer deploy, agrega estas variables en "Environment Variables":
+
+```bash
+MERCADOPAGO_ACCESS_TOKEN=APP_USR-tu-access-token
+MERCADOPAGO_PUBLIC_KEY=APP_USR-tu-public-key
+NODE_ENV=production
+FRONTEND_URL=https://tudominio.com
+FIREBASE_PROJECT_ID=tu-project-id
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk@tu-proyecto.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nTU_PRIVATE_KEY\n-----END PRIVATE KEY-----\n"
+```
+
+> **⚠️ IMPORTANTE**: Para `FIREBASE_PRIVATE_KEY`, copia todo el contenido incluyendo `-----BEGIN PRIVATE KEY-----` y `-----END PRIVATE KEY-----`. Los `\n` representan saltos de línea.
+
+### 5. Deploy
+
+1. Click "Deploy"
+2. Espera ~1-2 minutos
+3. Vercel te dará una URL como: `https://tu-proyecto.vercel.app`
+
+### 6. Actualizar BACKEND_URL
+
+1. Ve a "Settings" → "Environment Variables"
+2. Agrega una nueva variable:
+   ```
+   BACKEND_URL=https://tu-proyecto.vercel.app
+   ```
+3. Haz un nuevo deploy desde "Deployments" → "Redeploy"
+
+### 7. Configurar Webhook en Mercado Pago
+
+1. Ve a [Mercado Pago Developers](https://www.mercadopago.com.mx/developers/panel)
+2. Ve a "Tus integraciones" → Tu aplicación
+3. En "Webhooks" configura:
+   ```
+   URL: https://tu-proyecto.vercel.app/api/payment/webhook
+   Eventos: Pagos
+   ```
+
+### 8. Verificar el Deploy
+
+Visita `https://tu-proyecto.vercel.app/` y deberías ver:
+```json
+{
+  "success": true,
+  "message": "Albercas y Agua - Mercado Pago API",
+  "version": "1.0.0"
+}
+```
+
+### 9. Actualizar Frontend
+
+En tu archivo `.env` del frontend, actualiza:
+```bash
+VITE_MERCADOPAGO_BACKEND_URL=https://tu-proyecto.vercel.app
+```
+
+---
+
+## 🌐 Deployment a Railway (Alternativa - Requiere Pago)
 
 ### 1. Crear Cuenta en Railway
 
@@ -126,7 +208,7 @@ Recibe notificaciones automáticas de Mercado Pago cuando cambia el estado de un
 
 En Railway dashboard, ve a la pestaña "Variables" y agrega:
 
-```
+```bash
 MERCADOPAGO_ACCESS_TOKEN=APP_USR-tu-access-token
 MERCADOPAGO_PUBLIC_KEY=APP_USR-tu-public-key
 PORT=3001
@@ -138,25 +220,15 @@ FIREBASE_CLIENT_EMAIL=firebase-adminsdk@...
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 ```
 
-### 3. Deploy
+### 3. Deploy y Webhook
 
-Railway detectará automáticamente el `package.json` y desplegará la aplicación.
+Railway desplegará automáticamente. Configura el webhook en Mercado Pago con la URL de Railway.
 
-### 4. Obtener URL
+> **💡 Tip**: Railway requiere pago después de agotar el tier gratuito. Considera usar Vercel para hosting 100% gratis.
 
-Una vez desplegado, Railway te dará una URL como: `https://tu-proyecto.up.railway.app`
+---
 
-### 5. Configurar Webhook en Mercado Pago
-
-1. Ve a [Mercado Pago Developers](https://www.mercadopago.com.mx/developers/panel)
-2. Ve a "Tus integraciones" → Tu aplicación
-3. En "Webhooks" configura:
-   ```
-   URL: https://tu-proyecto.up.railway.app/api/payment/webhook
-   Eventos: Pagos
-   ```
-
-## 🌐 Deployment a Render (Alternativa)
+## 🌐 Deployment a Render (Alternativa - Free Tier Limitado)
 
 ### 1. Crear Cuenta en Render
 
@@ -187,23 +259,35 @@ Render desplegará automáticamente y te dará una URL.
 - ✅ CORS configurado solo para el dominio del frontend
 - ✅ Validación de requests con express-validator
 - ✅ Firebase Service Account protegido en variables de entorno
+- ✅ Serverless en Vercel: cada función se ejecuta en un contenedor aislado
 
 ## 🐛 Troubleshooting
 
 ### Error: Firebase Admin not initialized
-Verifica que las credenciales de Firebase estén correctamente configuradas en `.env`.
+Verifica que las credenciales de Firebase estén correctamente configuradas en las variables de entorno de Vercel.
 
 ### Error: MERCADOPAGO_ACCESS_TOKEN not configured
-Asegúrate de que el `.env` tenga el Access Token correcto.
+Asegúrate de que las variables de entorno estén configuradas en Vercel (Settings → Environment Variables).
 
 ### Webhook no funciona
 1. Verifica que la URL del webhook esté configurada en Mercado Pago
-2. Revisa los logs del servidor
-3. Asegúrate de que el `BACKEND_URL` en el .env sea correcto
+2. Revisa los logs en Vercel (Runtime Logs)
+3. Asegúrate de que la URL sea `https://tu-proyecto.vercel.app/api/payment/webhook`
+
+### Cold Start (Vercel)
+Si el primer request tarda 1-2 segundos, es normal. Vercel usa serverless functions que se "despiertan" con el primer request. Los siguientes serán instantáneos.
+
+### CORS Error
+Verifica que `FRONTEND_URL` en Vercel coincida EXACTAMENTE con tu dominio frontend (sin barra al final).
 
 ## 📝 Logs
 
-En Railway/Render, puedes ver los logs en tiempo real desde el dashboard para debug.
+En Vercel, puedes ver los logs en tiempo real:
+1. Ve a tu proyecto en Vercel
+2. Click en "Deployments" → Selecciona el deployment activo
+3. Ve a "Runtime Logs" para ver requests en tiempo real
+
+En Railway/Render también hay logs en el dashboard.
 
 ## 📞 Soporte
 
